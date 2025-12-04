@@ -1,0 +1,37 @@
+[package]
+name = "aoc_2025_xx"
+version = "0.1.0"
+edition = "2024"
+
+# [dev-dependencies]
+# criterion = "0.8.0"
+# gnuplot = "0.0.46"
+
+# [[bench]]
+# name = "my_bench"
+# harness = false
+
+[lints.rust]
+dead_code = "allow"
+unused_variables = "allow"
+unused_imports = "allow"
+
+[profile.release]        # default release profile
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.fast]           # custom profile for maximum speed
+inherits = "release"
+lto = false
+
+[profile.small]          # custom profile for smallest size
+inherits = "release"
+opt-level = "z"
+lto = true
+
+# [profile.bench]
+# inherits = "fast"
+
