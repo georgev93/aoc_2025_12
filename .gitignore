@@ -1,1 +1,3 @@
 /target
+tests/non_open_permission.txt
+/data/input.txt
