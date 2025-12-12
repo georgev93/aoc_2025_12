@@ -3,6 +3,7 @@ use crate::file_parser::FileParser;
 
 pub mod presents;
 pub mod space;
+pub mod tree;
 
 pub fn solve_pt1(input_file: &str) -> u64 {
     2
