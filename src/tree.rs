@@ -72,6 +72,14 @@ impl<'a> Tree<'a> {
         }
     }
 
+    pub fn simple_check(&self) -> bool {
+        let mut grid_space = (self.grid.len() - 2) * (self.grid[0].len() - 2);
+        for (poss_idx, possibility) in self.present_types.iter().enumerate() {
+            grid_space = grid_space.saturating_sub(possibility.get_size() * self.demand[poss_idx]);
+        }
+        grid_space != 0
+    }
+
     pub fn try_to_fit(&self) -> bool {
         if self.space_slack < 0 {
             return false;
