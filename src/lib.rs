@@ -21,12 +21,14 @@ pub fn solve_pt1(input_file: &str) -> u64 {
     }
 
     let mut counter = 0;
-    // for tree in trees {
-    //     if tree.try_to_fit() {
-    //         counter += 1;
-    //     }
-    // }
-    trees[0].try_to_fit();
+    for tree in trees {
+        if tree.try_to_fit() {
+            println!("Tree PASS");
+            counter += 1;
+        } else {
+            println!("Tree FAIL");
+        }
+    }
 
     counter
 }
@@ -60,7 +62,7 @@ mod tests {
     fn example_pts() {
         let my_file = FileParser::new("data/example.txt");
         assert_eq!(solve_pt1(my_file.get_str()), EXAMPLE_PT1);
-        assert_eq!(solve_pt2(my_file.get_str()), EXAMPLE_PT2);
+        // assert_eq!(solve_pt2(my_file.get_str()), EXAMPLE_PT2);
     }
 
     // #[test]

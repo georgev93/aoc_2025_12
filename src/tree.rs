@@ -81,6 +81,7 @@ impl<'a> Tree<'a> {
             return true;
         }
 
+        // Build vector of possibilities
         let mut possible_move_vector: Vec<PossibleMove> = Vec::new();
         for (present_idx, present) in self.present_types.iter().enumerate() {
             if self.demand[present_idx] == 0 {
@@ -91,6 +92,7 @@ impl<'a> Tree<'a> {
             }
         }
 
+        // Build vector of trees
         let mut possible_trees: Vec<Tree> = Vec::new();
         for row in 2..(self.grid.len() - 2) {
             for col in 2..(self.grid[0].len() - 2) {
@@ -103,10 +105,7 @@ impl<'a> Tree<'a> {
             }
         }
 
-        // println!("GOT HERE");
-
         for tree in possible_trees {
-            println!("Trying tree: ");
             if tree.try_to_fit() {
                 return true;
             }
