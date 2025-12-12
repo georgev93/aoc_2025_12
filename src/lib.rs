@@ -1,12 +1,34 @@
 pub mod file_parser;
-use crate::file_parser::FileParser;
+use crate::{file_parser::FileParser, presents::PresentPossibilities, tree::Tree};
 
 pub mod presents;
 pub mod space;
 pub mod tree;
 
 pub fn solve_pt1(input_file: &str) -> u64 {
-    2
+    let mut sections: Vec<&str> = input_file.split("\n\n").collect();
+
+    let tree_descriptions = sections.pop().unwrap();
+
+    let mut presents: Vec<PresentPossibilities> = Vec::with_capacity(sections.len() - 1);
+    for section in sections {
+        presents.push(PresentPossibilities::new(&section[3..]));
+    }
+
+    let mut trees: Vec<Tree> = Vec::with_capacity(tree_descriptions.lines().count());
+    for tree_description in tree_descriptions.lines() {
+        trees.push(Tree::new(tree_description, &presents));
+    }
+
+    let mut counter = 0;
+    // for tree in trees {
+    //     if tree.try_to_fit() {
+    //         counter += 1;
+    //     }
+    // }
+    trees[0].try_to_fit();
+
+    counter
 }
 
 pub fn solve_pt2(input_file: &str) -> u64 {

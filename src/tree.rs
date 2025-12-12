@@ -5,6 +5,10 @@ use std::{
     hash::Hash,
 };
 
+// Present_idx, Possibility_idx
+type PossibleMove = (usize, usize);
+
+#[derive(Debug)]
 pub struct Tree<'a> {
     grid: Vec<Vec<Space>>,
     present_types: &'a Vec<PresentPossibilities>,
@@ -58,6 +62,58 @@ impl<'a> Tree<'a> {
         }
     }
 
+    pub fn clone_from_self(&self) -> Self {
+        Self {
+            grid: self.grid.clone(),
+            present_types: self.present_types,
+            demand: self.demand.clone(),
+            state: self.state.clone(),
+            space_slack: self.space_slack,
+        }
+    }
+
+    pub fn try_to_fit(&self) -> bool {
+        if self.space_slack < 0 {
+            return false;
+        }
+
+        if self.demand.iter().all(|&x| x == 0) {
+            return true;
+        }
+
+        let mut possible_move_vector: Vec<PossibleMove> = Vec::new();
+        for (present_idx, present) in self.present_types.iter().enumerate() {
+            if self.demand[present_idx] == 0 {
+                continue;
+            }
+            for possibility_index in 0..self.present_types[present_idx].possibilities.len() {
+                possible_move_vector.push((present_idx, possibility_index));
+            }
+        }
+
+        let mut possible_trees: Vec<Tree> = Vec::new();
+        for row in 2..(self.grid.len() - 2) {
+            for col in 2..(self.grid[0].len() - 2) {
+                for possible_move in &possible_move_vector {
+                    let mut possible_tree = self.clone_from_self();
+                    if possible_tree.place_present(possible_move.0, possible_move.1, col, row) {
+                        possible_trees.push(possible_tree);
+                    }
+                }
+            }
+        }
+
+        // println!("GOT HERE");
+
+        for tree in possible_trees {
+            println!("Trying tree: ");
+            if tree.try_to_fit() {
+                return true;
+            }
+        }
+        false
+    }
+
     pub fn place_present(
         &mut self,
         present_idx: usize,
@@ -75,7 +131,7 @@ impl<'a> Tree<'a> {
 
         for (row_idx, row) in pres_ref.spaces.iter().enumerate() {
             for (space_idx, pres_space) in row.iter().enumerate() {
-                let x = pos_x + row_idx;
+                let x = pos_x + space_idx;
                 let y = pos_y + row_idx;
 
                 let current_space = &mut self.grid[y][x];
@@ -118,7 +174,10 @@ impl<'a> Tree<'a> {
 
     fn explore_pocket(&self, x: usize, y: usize) -> Option<HashSet<(usize, usize)>> {
         let mut hash_set: HashSet<(usize, usize)> = HashSet::new();
+        let mut to_examine: HashSet<(usize, usize)> = HashSet::new();
         let mut exploration_queue: VecDeque<(usize, usize)> = VecDeque::new();
+
+        to_examine.insert((x, y));
         exploration_queue.push_front((x, y));
 
         while let Some(coord) = exploration_queue.pop_front() {
@@ -128,10 +187,18 @@ impl<'a> Tree<'a> {
                 }
                 Space::Pocket => {
                     hash_set.insert(coord);
-                    exploration_queue.push_back((coord.0 - 1, coord.1));
-                    exploration_queue.push_back((coord.0 + 1, coord.1));
-                    exploration_queue.push_back((coord.0, coord.1 - 1));
-                    exploration_queue.push_back((coord.0, coord.1 + 1));
+                    if to_examine.insert((coord.0 - 1, coord.1)) {
+                        exploration_queue.push_back((coord.0 - 1, coord.1));
+                    }
+                    if to_examine.insert((coord.0 + 1, coord.1)) {
+                        exploration_queue.push_back((coord.0 + 1, coord.1));
+                    }
+                    if to_examine.insert((coord.0, coord.1 - 1)) {
+                        exploration_queue.push_back((coord.0, coord.1 - 1));
+                    }
+                    if to_examine.insert((coord.0, coord.1 + 1)) {
+                        exploration_queue.push_back((coord.0, coord.1 + 1));
+                    }
                 }
                 Space::Occupied => {}
             }

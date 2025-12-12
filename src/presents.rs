@@ -107,14 +107,14 @@ mod formatting {
 mod tests {
     use super::*;
 
-    #[test]
-    fn printing() {
-        present_without_whitespace!(my_pres, "#.#", "..#", "##.");
-        println!("{}", my_pres);
-        println!();
-        dbg!(my_pres);
-        // panic!();
-    }
+    // #[test]
+    // fn printing() {
+    //     present_without_whitespace!(my_pres, "#.#", "..#", "##.");
+    //     println!("{}", my_pres);
+    //     println!();
+    //     dbg!(my_pres);
+    //     // panic!();
+    // }
 
     #[test]
     fn rotate() {
