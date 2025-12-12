@@ -16,6 +16,9 @@ unused_variables = "allow"
 unused_imports = "allow"
 unused_macros = "allow"
 
+[lints.clippy]
+needless_range_loop = "allow"
+
 [profile.release]        # default release profile
 opt-level = 3
 lto = "fat"

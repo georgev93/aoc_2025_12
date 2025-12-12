@@ -21,7 +21,7 @@ pub use possibilities::PresentPossibilities;
 
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct Present {
-    spaces: [[Space; 3]; 3],
+    pub spaces: [[Space; 3]; 3],
 }
 
 impl Present {

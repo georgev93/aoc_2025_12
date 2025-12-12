@@ -4,7 +4,7 @@ use super::*;
 
 #[derive(Debug)]
 pub struct PresentPossibilities {
-    possibilities: Vec<Present>,
+    pub possibilities: Vec<Present>,
     pub free_space: usize,
 }
 
@@ -31,6 +31,10 @@ impl PresentPossibilities {
             possibilities: hash_set.iter().cloned().collect(),
             free_space,
         }
+    }
+
+    pub fn get_size(&self) -> usize {
+        9 - self.free_space
     }
 }
 
